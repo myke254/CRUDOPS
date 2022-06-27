@@ -1,31 +1,35 @@
 ﻿using CRUDOPS.EmployeeData;
 using CRUDOPS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUDOPS.Controllers
-{
+{   
     [ApiController]
+    [Route("api")]
     public class EmployeesController : ControllerBase
     {
         private IEmployeeData _employeeData;
+        private readonly JwtAuthManager jwtAuthManager;
 
-        public EmployeesController(IEmployeeData employeeData)
+        public EmployeesController(IEmployeeData employeeData,JwtAuthManager jwtAuthManager)
         {
             _employeeData = employeeData;
+            this.jwtAuthManager = jwtAuthManager;
         }
 
-
+        [Authorize]
         [HttpGet]
-        [Route("api/[controller]")]
-
+        [Route("[controller]")]
         public IActionResult GetEmployees()
         {
             return Ok(_employeeData.GetEmployees());
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("api/[controller]/{id}")]
+        [Route("[controller]/{id}")]
 
         public IActionResult GetEmployee(Guid id)
         {
@@ -36,18 +40,18 @@ namespace CRUDOPS.Controllers
             }
             return NotFound($"Employee with id: {id} was not found");
         }
-
+        [Authorize]
         [HttpPost]
-        [Route("api/[controller]")]
-
+        [Route("[controller]")]
         public IActionResult GetEmployee(Employee employee)
         {
             _employeeData.CreateEmployee(employee);
             return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + employee.Id,employee);
         }
 
+        [Authorize]
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("[controller]/{id}")]
 
         public IActionResult DeleteEmployee(Guid id)
         {
@@ -60,8 +64,9 @@ namespace CRUDOPS.Controllers
             return NotFound($"Employee with id: {id} was not found");
         }
 
+        [Authorize]
         [HttpPatch]
-        [Route("api/[controller]/{id}")]
+        [Route("[controller]/{id}")]
 
         public IActionResult UpdateEmployee(Guid id, Employee employee)
         {
@@ -74,5 +79,22 @@ namespace CRUDOPS.Controllers
             }
             return NotFound($"Employee with id: {id} was not found");
         }
+
+        [HttpPost("authorize")]
+        public IActionResult AuthUser([FromBody] User user)
+        {
+            var token = jwtAuthManager.authenticate(user.username!,user.password!);
+            if(token == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(token);
+        }
+
+    }
+    public class User
+    {
+        public string? username { get; set; }
+        public string? password { get; set; }
     }
 }
