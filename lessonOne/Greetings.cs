@@ -25,7 +25,7 @@ public class Greetings : IGreetings
     start:
         name = Console.ReadLine();
         Regex rx = new Regex(@"^[A-Za-z]+$");
-        while (!rx.IsMatch(name!))
+        while (!rx.IsMatch(name!)||string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine(myConstants.invalidName);
             goto start;
