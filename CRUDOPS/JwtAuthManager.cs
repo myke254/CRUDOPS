@@ -8,16 +8,20 @@ namespace CRUDOPS
     public class JwtAuthManager
     {
         private readonly string key;
-        private readonly IDictionary<string, string> users = new Dictionary<string, string>(){{"test","password"},{"tst","pwd"}};
+        private readonly IDictionary<string, string> users = 
+            new Dictionary<string, string>(){{"user","password"},{"user1","pwd"}, { "user2", "psd" } };
 
         public JwtAuthManager(string key) { this.key = key; }
-        public string authenticate(string username,string password) 
+       
+        public string? authenticate(string username,string password) 
         {
             if (!users.Any(o=> o.Key== username&& o.Value == password))
             {
                 return null;
             }
+
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
             var tokenKey = Encoding.ASCII.GetBytes(key);
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor

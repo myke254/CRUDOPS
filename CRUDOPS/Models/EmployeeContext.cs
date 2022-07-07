@@ -7,7 +7,7 @@ namespace CRUDOPS.Models
 
         public EmployeeContext(DbContextOptions<EmployeeContext> options) : base(options)
         {
-
+            
         }
         public DbSet<Employee> Employees { get; set; }
 

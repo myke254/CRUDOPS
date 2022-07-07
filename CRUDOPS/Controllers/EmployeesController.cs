@@ -40,7 +40,7 @@ namespace CRUDOPS.Controllers
             }
             return NotFound($"Employee with id: {id} was not found");
         }
-        [Authorize]
+       // [Authorize]
         [HttpPost]
         [Route("[controller]")]
         public IActionResult GetEmployee(Employee employee)
@@ -83,7 +83,7 @@ namespace CRUDOPS.Controllers
         [HttpPost("authorize")]
         public IActionResult AuthUser([FromBody] User user)
         {
-            var token = jwtAuthManager.authenticate(user.username!,user.password!);
+            var token = jwtAuthManager.authenticate(user.username!, user.password!);
             if(token == null)
             {
                 return Unauthorized();
