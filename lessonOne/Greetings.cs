@@ -25,7 +25,7 @@ public class Greetings : IGreetings
     start:
         name = Console.ReadLine();
         Regex rx = new Regex(@"^[A-Za-z ]+$");
-        while (!rx.IsMatch(name!)||string.IsNullOrWhiteSpace(name))
+        if (!rx.IsMatch(name!)||string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine(myConstants.invalidName);
             goto start;
@@ -40,7 +40,7 @@ public class Greetings : IGreetings
         yobString = Console.ReadLine()!;
         isnum = int.TryParse(yobString, out YOB);
 
-        while (!isnum || YOB < 0 || YOB > today || YOB == today)
+        if (!isnum || YOB < 0 || YOB > today || YOB == today)
         {
             Console.WriteLine(myConstants.invalidYear(name!));
             goto start;
